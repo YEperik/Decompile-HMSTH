@@ -1,0 +1,4 @@
+build:
+  configuration: Release
+  source_dir: src
+  test_dir: tests

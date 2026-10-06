@@ -1,0 +1,3 @@
+# Emotion Engine
+
+Research notes.

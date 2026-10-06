@@ -1,0 +1,6 @@
+game:
+  name: "Harvest Moon: Save the Homeland"
+  serial: "SLUS_202.51"
+  platform: "PlayStation 2"
+target:
+  platform: "PC"

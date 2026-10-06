@@ -1,0 +1,25 @@
+# Roadmap
+
+- [ ] M0 Repository and development environment
+- [ ] M1 Disc/file research
+- [ ] M2 SLUS_202.51 analysis
+- [ ] M3 HDA parser
+- [ ] M4 GDTB texture pipeline
+- [ ] M5 RDTB model pipeline
+- [ ] M6 SRDB/map pipeline
+- [ ] M7 Audio pipeline
+- [ ] M8 Text/dialogue pipeline
+- [ ] M9 Player system
+- [ ] M10 NPC system
+- [ ] M11 Time/calendar
+- [ ] M12 Inventory/items
+- [ ] M13 Farming
+- [ ] M14 Animals
+- [ ] M15 Relationships
+- [ ] M16 Event system
+- [ ] M17 Save/load
+- [ ] M18 Complete maps
+- [ ] M19 Complete gameplay
+- [ ] M20 PC polish
+- [ ] M21 Compatibility/regression testing
+- [ ] M22 Release
