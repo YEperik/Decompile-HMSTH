@@ -8,6 +8,3 @@ Target:
 
 ## Project goal
 Research the original PS2 executable and data formats, document discovered behavior, build extraction/conversion tooling, and create a clean PC implementation.
-
-## Important
-This repository is intended for source code, tools, documentation, research notes, and original project files. Do not commit commercial game ISOs, the original executable, BIOS, or copyrighted extracted assets.
