@@ -11,14 +11,3 @@ Research the original PS2 executable and data formats, document discovered behav
 
 ## Important
 This repository is intended for source code, tools, documentation, research notes, and original project files. Do not commit commercial game ISOs, the original executable, BIOS, or copyrighted extracted assets.
-
-## Main areas
-- `docs/` — technical documentation
-- `research/` — reverse-engineering research
-- `tools/` — file-format and asset tools
-- `src/` — PC engine and game implementation
-- `tests/` — automated tests
-- `scripts/` — automation
-- `config/` — project configuration
-
-See `ROADMAP.md` for milestones.
