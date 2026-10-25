@@ -39,7 +39,7 @@ def main(argv=None):
     repair.add_argument("root")
     repair.add_argument("--backup", required=True)
     repair.add_argument("--expected-token", required=True)
-    external = commands.add_parser('run-tool', help='Jalankan command tepercaya yang dipilih eksplisit (POSIX)')
+    external = commands.add_parser('run-tool', help='Jalankan command tepercaya yang dipilih eksplisit (POSIX/Windows .exe)')
     external.add_argument('root')
     external.add_argument('--argv-json', required=True, help='Array JSON argv; executable pertama harus absolute')
     external.add_argument('--timeout', type=float, default=30)
@@ -223,10 +223,26 @@ def main(argv=None):
         dependencies.add_argument('--input-id', required=True)
         dependencies.add_argument('--symbol-id', required=True)
         dependencies.add_argument('--data-depth', type=int, default=0)
+    patch = commands.add_parser('ghidra-fix-zero128', help='Perbaiki operand zero128 pada versi ekstensi yang cocok')
+    patch.add_argument('--ghidra-home', required=True)
+    patch.add_argument('--jdk-home', required=True)
+    patch.add_argument('--output', required=True)
+    disc = commands.add_parser('extract-disc-elf', help='Ekstrak BOOT2 root dari ISO2048/BIN2352')
+    disc.add_argument('source')
+    disc.add_argument('--output', required=True)
+    program = commands.add_parser('ghidra-program', help='Analisis ELF EE dan export semua fungsi yang ditemukan')
+    program.add_argument('root')
+    program.add_argument('--input-id', required=True)
+    program.add_argument('--ghidra-home', required=True)
+    program.add_argument('--jdk-home', required=True)
+    program.add_argument('--timeout', type=float, default=1800)
     decompile = commands.add_parser('ghidra-decompile', help='Decompile satu fungsi EE dengan R5900 nyata')
     decompile.add_argument('root')
     decompile.add_argument('--input-id', required=True)
-    decompile.add_argument('--symbol-id', required=True)
+    target = decompile.add_mutually_exclusive_group(required=True)
+    target.add_argument('--symbol-id')
+    target.add_argument('--start', type=lambda value: int(value, 0), help='Alamat virtual fungsi, misalnya 0x00100000')
+    decompile.add_argument('--size', type=lambda value: int(value, 0), help='Ukuran byte; wajib bersama --start')
     decompile.add_argument('--ghidra-home', required=True)
     decompile.add_argument('--jdk-home', required=True)
     decompile.add_argument('--timeout', type=float, default=180)
@@ -239,6 +255,35 @@ def main(argv=None):
     batch.add_argument('--jdk-home', required=True)
     batch.add_argument('--timeout', type=float, default=180, help='Batas detik per fungsi')
     batch.add_argument('--analysis', choices=('bounded', 'recommended'), default='bounded')
+    vector = commands.add_parser('vector-draft', help='Draft vector 128-bit dengan opsi konversi dan transfer nilai VU')
+    vector.add_argument('root')
+    vector.add_argument('--job-id', required=True)
+    vector.add_argument('--vu-transfers', action='store_true', help='Terapkan transfer nilai LQC2/SQC2 128-bit yang diverifikasi')
+    vector.add_argument('--vu-conversions', action='store_true', help='Terapkan VFTOI0/4 in-place dengan mask seragam yang diverifikasi')
+    for name in ('ghidra-cop2-audit', 'ghidra-cop2-trace'):
+        bridge = commands.add_parser(name, help='Hubungkan export R5900 tervalidasi ke executor COP2')
+        bridge.add_argument('root')
+        bridge.add_argument('--job-id', required=True)
+        if name == 'ghidra-cop2-trace':
+            bridge.add_argument('--start-address', type=lambda v: int(v, 0), required=True)
+            bridge.add_argument('--state', required=True)
+    for name in ('vu-micro-trace','vif-dma-trace','gif-gs-trace'):
+        trace=commands.add_parser(name,help='Eksekusi subset VU atau alur DMA/VIF dengan state eksplisit')
+        trace.add_argument('root');trace.add_argument('--input',required=True)
+    cop2 = commands.add_parser('ee-cop2-trace', help='Jalankan EE/COP2 dengan replay boundary atau interpreter micro VU0 terbatas')
+    cop2.add_argument('root')
+    cop2.add_argument('--input', required=True)
+    flag = commands.add_parser('vu-flag-trace', help='Hitung state CLIP/MAC/STATUS dari hasil FMAC dan siklus eksplisit')
+    flag.add_argument('root')
+    flag.add_argument('--input', required=True)
+    clip = commands.add_parser('vu-clip-trace', help='Hitung state CLIP dengan siklus VU eksplisit')
+    clip.add_argument('root')
+    clip.add_argument('--input', required=True)
+    vector_check = commands.add_parser('check-vector-draft', help='Periksa draft vector dengan compiler EE nyata')
+    vector_check.add_argument('root')
+    vector_check.add_argument('--draft-id', required=True)
+    vector_check.add_argument('--compiler', required=True)
+    vector_check.add_argument('--timeout', type=float, default=30)
     check = commands.add_parser('check-decompile', help='Uji sintaks export asli dengan compiler eksplisit')
     check.add_argument('root')
     check.add_argument('--job-id', required=True)
@@ -249,27 +294,86 @@ def main(argv=None):
     check.add_argument('--strip-debug', action='store_true', help='Simpan object EE tanpa debug terpisah; cek section ALLOC identik')
     check.add_argument('--storage-types', action='store_true', help='Definisi unsigned untuk undefined1/2/4/8; tipe asli belum terverifikasi')
     check.add_argument('--emit-object', action='store_true', help='Compile object host tanpa link atau eksekusi')
+    startup = commands.add_parser('ee-startup', help='Eksekusi entry ELF R5900 sampai batas instruksi/kernel; belum menjalankan game penuh')
+    startup.add_argument('root')
+    startup.add_argument('--input-id', required=True)
+    startup.add_argument('--max-steps', type=int, default=2000000)
+    startup.add_argument('--kernel-profile', choices=('none', 'play-startup-1', 'play-startup-2', 'play-startup-3', 'play-startup-4', 'play-startup-5', 'play-startup-6', 'play-startup-7', 'play-startup-8'), default='none')
+    startup.add_argument('--disc-image', help='BIN Mode2/Form1 untuk backend CDVD baca-saja')
+    startup.add_argument('--bios', help='File BIOS ROM0 .bin 4 MiB untuk pemetaan IOP baca-saja')
+    startup.add_argument('--rtc', help='RTC awal YYYY-MM-DDTHH:MM:SS, waktu konsol JST')
+    startup.add_argument('--arg', action='append', default=[], help='Argumen guest argc/argv, dapat diulang')
     args = parser.parse_args(argv)
     def display(value):
         emit(value, json_output=args.json or (not args.text and not sys.stdout.isatty()))
     try:
         command = args.command
+        if command == 'ee-startup':
+            from app.application.ee_startup import run_startup
+            display(run_startup(Store(args.root), args.input_id, args.max_steps,
+                                kernel_profile=args.kernel_profile, arguments=args.arg, disc_image=args.disc_image,rtc=args.rtc,bios=args.bios))
+            return 1  # A retained boundary is not successful game initialization.
         if command == 'ghidra-batch':
             from app.application.decompile_batch import decompile_batch
             result = decompile_batch(Store(args.root), args.input_id, args.symbol_id,
                                      args.ghidra_home, args.jdk_home, args.timeout, analysis=args.analysis)
             display(result)
             return 0 if result['status'] == 'COMPLETED_UNVERIFIED' else 1
+        if command == 'vector-draft':
+            from app.application.vector_storage import vector_draft
+            display(vector_draft(Store(args.root), args.job_id, vu_conversions=args.vu_conversions, vu_transfers=args.vu_transfers))
+            return 0
+        if command in ('ghidra-cop2-audit', 'ghidra-cop2-trace'):
+            from app.application.cop2_exports import process_export
+            result = process_export(Store(args.root), args.job_id, getattr(args, 'start_address', None), getattr(args, 'state', None))
+            display(result)
+            return 1 if result.get('execution', {}).get('blocked_reason') else 0
+        if command in ('vu-micro-trace','vif-dma-trace','gif-gs-trace'):
+            from app.application.vu_execution import trace_execution
+            report=trace_execution(Store(args.root),args.input,command)
+            display(report)
+            return 1 if report['blocked_reason'] else 0
+        if command == 'ee-cop2-trace':
+            from app.application.ee_cop2 import trace_cop2
+            report = trace_cop2(Store(args.root), args.input)
+            display(report)
+            return 1 if report['blocked_reason'] else 0
+        if command == 'vu-flag-trace':
+            from app.application.vu_flags import trace_flags
+            display(trace_flags(Store(args.root), args.input))
+            return 0
+        if command == 'vu-clip-trace':
+            from app.application.vu_state import trace_clip
+            display(trace_clip(Store(args.root), args.input))
+            return 0
+        if command == 'check-vector-draft':
+            from app.application.vector_checks import check_vector_draft
+            result = check_vector_draft(Store(args.root), args.draft_id, args.compiler, args.timeout)
+            display(result)
+            return 0 if result['syntax_accepted'] else 1
         if command == 'check-decompile':
             from app.application.export_checks import check_export
             result = check_export(Store(args.root), args.job_id, args.compiler, args.language, args.timeout,
                                   storage_types=args.storage_types, emit_object=args.emit_object, target=args.target, strip_debug=args.strip_debug)
             display(result)
             return 0 if result['syntax_accepted'] else 1
+        if command == 'ghidra-fix-zero128':
+            from app.application.r5900_zero_patch import apply_zero_patch
+            display(apply_zero_patch(args.ghidra_home,args.jdk_home,args.output))
+            return 0
+        if command == 'extract-disc-elf':
+            from app.application.disc_elf import extract_disc_elf
+            display(extract_disc_elf(args.source,args.output))
+            return 0
+        if command == 'ghidra-program':
+            from app.application.decompile_program import decompile_program
+            result=decompile_program(Store(args.root),args.input_id,args.ghidra_home,args.jdk_home,args.timeout)
+            display(result)
+            return 0 if result['status']=='DECOMPILED_UNVERIFIED' else 1
         if command == 'ghidra-decompile':
             from app.application.decompile import decompile_function
             result=decompile_function(Store(args.root),args.input_id,args.symbol_id,
-                                      args.ghidra_home,args.jdk_home,args.timeout,analysis=args.analysis)
+                                      args.ghidra_home,args.jdk_home,args.timeout,analysis=args.analysis,start=args.start,size=args.size)
             display(result)
             return 0 if result['status']=='DECOMPILED_UNVERIFIED' else 1
         if command in ('extract-function-data','verify-function-data'):
