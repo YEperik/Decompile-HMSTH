@@ -20,9 +20,10 @@ def root_help():
         'Ekstraksi : extract-function, extract-section, extract-data',
         'Analisis  : function-refs, compare-functions, target-words',
         'Decompiler: ghidra-decompile, ghidra-batch, check-decompile',
-        'Draft     : draft-add, draft-history, draft-show',
+        'Draft     : draft-add, draft-history, draft-show, vector-draft',
+        'COP2/EE   : ghidra-cop2-audit, ghidra-cop2-trace, ee-cop2-trace, ee-startup',
+        'VU/GIF    : vu-micro-trace, vif-dma-trace, gif-gs-trace',
         'Antrean   : queue-add, queue-list, queue-update',
-        '',
         'COMMAND --help   Opsi perintah',
         '--help-all       Semua perintah',
         '--json           Hasil lengkap'))
@@ -30,6 +31,9 @@ def root_help():
 
 def compact(value,max_lines=18):
     lines=[];omitted=False
+    if isinstance(value, dict) and value.get('status') == 'EE_STARTUP_BLOCKED':
+        value = {key: value[key] for key in ('status', 'executed_instructions', 'stop', 'initialization_complete', 'report_file') if key in value}
+        omitted = True
     metadata=value.get('metadata') if isinstance(value,dict) else None
     if isinstance(metadata,dict) and isinstance(metadata.get('section'),dict):
         section=metadata['section']
@@ -41,6 +45,42 @@ def compact(value,max_lines=18):
     if isinstance(value, dict) and 'report_file' in value and 'functions' in value and 'counts' in value:
         value = {key: value[key] for key in ('status', 'counts', 'report_file', 'semantics_verified')}
         omitted = True
+    if isinstance(value, dict) and value.get('status') == 'VECTOR_STORAGE_DRAFT_UNVERIFIED':
+        value = {'status': value['status'], 'changes': len(value['changes']),
+                 'implemented_transfer_kinds': len(value.get('implemented_value_transfers', {})),
+                 'implemented_conversion_kinds': len(value.get('implemented_value_conversions', {})),
+                 'unimplemented_userop_kinds': len(value['unimplemented_userops']),
+                 'compiled': value['compiled'], 'semantics_verified': value['semantics_verified'],
+                 'report_file': value['report_file']}
+        omitted = True
+    if isinstance(value, dict) and value.get('status') in ('VECTOR_SYNTAX_ACCEPTED_UNVERIFIED', 'BLOCKED_VECTOR_SYNTAX', 'VECTOR_CHECK_FAILED'):
+        value = {key: value[key] for key in ('status', 'syntax_accepted', 'exit_code', 'run_dir', 'report_dir', 'semantics_verified', 'warnings')}
+        omitted = True
+    if isinstance(value, dict) and value.get('status') == 'VU_CLIP_TRACE_COMPUTED_UNVERIFIED':
+        value = {key: value[key] for key in ('status', 'visible_clip', 'history_clip', 'pending', 'hardware_verified', 'report_dir')}
+        omitted = True
+    if isinstance(value, dict) and value.get('status') == 'VU_FLAG_TRACE_COMPUTED_UNVERIFIED':
+        value = {key: value[key] for key in ('status', 'visible_clip', 'visible_mac', 'visible_status', 'pending', 'arithmetic_executed', 'arithmetic_profile', 'hardware_verified', 'report_dir')}
+        omitted = True
+    if isinstance(value, dict) and value.get('status') in ('EE_COP2_TRACE_BLOCKED', 'EE_COP2_TRACE_COMPUTED_UNVERIFIED'):
+        micro = value.get('micro_execution')
+        value = {key: value[key] for key in ('status', 'executed_instructions', 'stall_cycles', 'blocked_reason', 'microprogram_executed', 'hardware_verified', 'report_dir')}
+        if micro is not None:value.update(micro_steps=micro['steps'], micro_cycle=micro['cycle'], micro_running=micro['running'])
+        omitted = True
+    if isinstance(value, dict) and value.get('status', '').startswith('GHIDRA_COP2_'):
+        coverage = value['coverage']
+        value = {'status': value['status'], 'supported_instructions': coverage['supported_instructions'], 'total_instructions': coverage['total_instructions'], 'executed_instructions': value.get('execution', {}).get('executed_instructions', 0), 'blocked_reason': value.get('execution', {}).get('blocked_reason'), 'report_dir': value['report_dir']}
+        omitted = True
+    if isinstance(value,dict) and value.get('status','').startswith(('VU_MICRO_','VIF_DMA_')):
+        original=value;micro=value.get('micro_execution',{})
+        value={k:original[k] for k in ('status','blocked_reason','hardware_verified','report_dir') if k in original}
+        value.update(unit=micro.get('unit',original.get('unit')),micro_steps=micro.get('steps',original.get('micro_steps')),vu_cycle=micro.get('cycle',original.get('vu_cycle')))
+        omitted=True
+    if isinstance(value,dict) and value.get('status','').startswith('GIF_TRACE_'):
+        original=value
+        value={k:original[k] for k in ('status','blocked_reason','words_consumed','rendered','report_dir') if k in original}
+        value.update(tags=len(original['tags']),register_writes=len(original['register_writes']),images=len(original['image_packets']))
+        omitted=True
     skip={'limitations','scope','validation_scope','evidence','order','payload_validation_scope'}
     priority={'status','error','message','warnings','warning','association','binary_matching_claimed',
               'semantics_verified','relocations_applied','executed','standalone','result','comparison'}
