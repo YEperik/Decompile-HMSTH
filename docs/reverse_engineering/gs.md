@@ -1,3 +1,0 @@
-# Graphics Synthesizer
-
-Research notes.

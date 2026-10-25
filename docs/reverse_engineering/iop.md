@@ -1,3 +1,0 @@
-# IOP
-
-Research notes.
