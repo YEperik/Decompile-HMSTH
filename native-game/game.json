@@ -1,0 +1,10 @@
+{
+  "title": "Harvest Moon: Save the Homeland",
+  "serial": "SLUS_202.51",
+  "region": "USA",
+  "elf_sha256": "8b5b7ff210fae61c891329d38157a701df8940d53aa776fb1ae27201f285923a",
+  "target_language": "C++17",
+  "first_target": "Linux",
+  "status": "three_verified_math_fragments_only",
+  "game_executable": false
+}
