@@ -1,4 +1,12 @@
-build:
-  configuration: Release
-  source_dir: src
+project:
+  language: Python
+  minimum_version: "3.12"
+  package_dir: app
   test_dir: tests
+  test_command: "python -m unittest discover -s tests/unit -t . -v"
+  public_release_check: "python tools/check_public_release.py"
+
+build:
+  mode: source_package
+  game_binary_included: false
+  original_assets_included: false
