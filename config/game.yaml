@@ -1,6 +1,21 @@
+project:
+  name: "HMSTH-PC Decompilation Research Workbench"
+  status: "In Progress"
+  playable_pc_release: false
+
 game:
-  name: "Harvest Moon: Save the Homeland"
-  serial: "SLUS_202.51"
+  title: "Harvest Moon: Save the Homeland"
   platform: "PlayStation 2"
-target:
-  platform: "PC"
+  region: "North America (USA)"
+  serial: "SLUS_202.51"
+  target_cpu: "Emotion Engine / MIPS R5900"
+
+goal:
+  immediate: "Document and validate binary-analysis workflows against a user-supplied target executable."
+  long_term: "Explore a clean PC implementation only after research, implementation, and compatibility evidence justify that claim."
+
+redistribution:
+  original_game_code: false
+  disc_images: false
+  bios_files: false
+  extracted_game_assets: false
