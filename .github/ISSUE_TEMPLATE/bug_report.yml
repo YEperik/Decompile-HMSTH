@@ -1,0 +1,64 @@
+name: Bug report
+description: Report a reproducible problem without sharing commercial game data.
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not upload disc images, executable dumps, BIOS files, keys, save files, extracted game assets, or private workspace exports. Use synthetic inputs and redact local paths where possible.
+  - type: input
+    id: version
+    attributes:
+      label: Project commit or version
+      description: Include the commit hash or release tag.
+      placeholder: main@abcdef1 or v0.1.0
+    validations:
+      required: true
+  - type: input
+    id: python
+    attributes:
+      label: Python version
+      placeholder: Python 3.13.x
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: Operating system
+      placeholder: Windows 11 / Ubuntu 24.04 / macOS
+    validations:
+      required: true
+  - type: input
+    id: command
+    attributes:
+      label: Command or module
+      placeholder: python -m app inspect-elf ...
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      description: Use a synthetic fixture; do not attach original game data.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior and redacted logs
+    validations:
+      required: true
+  - type: checkboxes
+    id: policy
+    attributes:
+      label: Submission check
+      options:
+        - label: I have not included a disc image, BIOS, executable dump, proprietary asset, secret, or private workspace export.
+          required: true
