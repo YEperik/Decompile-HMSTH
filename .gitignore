@@ -1,9 +1,91 @@
-* text=auto
-*.py text eol=lf
-*.java text eol=lf
-*.h text eol=lf
-*.md text eol=lf
-*.yaml text eol=lf
-*.yml text eol=lf
-*.json text eol=lf
-*.toml text eol=lf
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Virtual environments and local configuration
+.venv/
+venv/
+env/
+.env
+.env.*
+!.env.example
+
+# Build and packaging output
+build/
+dist/
+*.egg-info/
+.eggs/
+wheelhouse/
+
+# Editors and operating systems
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Local workspaces, original input files, analysis outputs and dumps
+workspaces/
+workspace/
+inputs/
+originals/
+game/
+games/
+roms/
+iso/
+isos/
+extracted/
+dumps/
+outputs/
+artifacts/
+reports-local/
+
+# Console/game images and proprietary game data; never commit these
+*.iso
+*.img
+*.chd
+*.cue
+*.bin
+*.elf
+*.rom
+*.ps2
+*.sav
+*.srm
+*.mcr
+*.hda
+*.gdtb
+*.rdtb
+*.srdb
+*.vag
+*.dds
+
+# Native build artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+*.o
+*.obj
+*.a
+*.lib
+*.pdb
+*.ilk
+*.dmp
+*.mdmp
+
+# Logs and temporary files
+*.log
+logs/
+tmp/
+temp/
+*.tmp
+*.temp
