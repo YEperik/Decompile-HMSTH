@@ -1,9 +1,26 @@
-formats:
-  - HDA
-  - GDTB
-  - RDTB
-  - SRDB
-  - HD
-  - BD
-  - SQ
-  - TEXT
+# Research targets only. These entries do not imply complete decoders or rebuilders.
+research_targets:
+  - id: HDA
+    description: "Game data archive/container"
+    implementation_status: "Research target; completeness not verified"
+  - id: GDTB
+    description: "Texture-related data container"
+    implementation_status: "Research target; completeness not verified"
+  - id: RDTB
+    description: "Model-related data container"
+    implementation_status: "Research target; completeness not verified"
+  - id: SRDB
+    description: "Scene/map-related data container"
+    implementation_status: "Research target; completeness not verified"
+  - id: HD
+    description: "Audio-related companion data"
+    implementation_status: "Research target; completeness not verified"
+  - id: BD
+    description: "Audio-related companion data"
+    implementation_status: "Research target; completeness not verified"
+  - id: SQ
+    description: "Script/sequence-related data"
+    implementation_status: "Research target; completeness not verified"
+  - id: TEXT
+    description: "Text/dialogue-related structures"
+    implementation_status: "Research target; completeness not verified"
