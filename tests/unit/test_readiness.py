@@ -1,4 +1,5 @@
 import json
+import platform
 from pathlib import Path
 import subprocess
 import sys
@@ -66,6 +67,12 @@ class ReadinessTests(unittest.TestCase):
         with patch('app.application.readiness.os.name','posix'),patch('app.application.readiness.sys.version_info',(3,12,0)):
             r=runtime_report()
         self.assertEqual(r['process_runner'],'IMPLEMENTED_POSIX');self.assertTrue(r['python_minimum_met'])
+    def test_runtime_observation_is_dynamic_not_a_fake_ci_claim(self):
+        r=runtime_report()
+        evidence=r['runtime_test_evidence']
+        self.assertIn(platform.system(), evidence)
+        self.assertIn(platform.python_version(), evidence)
+        self.assertIn('not CI test evidence', evidence)
     def test_cli_doctor_and_check(self):
         a=self.material();root=fixture.fixture.ROOT
         r=subprocess.run([sys.executable,'-m','app','doctor'],cwd=root,capture_output=True,text=True)
