@@ -10,7 +10,7 @@ import unittest
 from unittest.mock import patch
 from uuid import uuid4
 
-from tests.support.legacy_tasks import TaskController
+from tests.support.task_controller import TaskController
 from app.domain.workspace.model import ConflictError, PathError, ValidationError
 from app.infrastructure.persistence.store import Store
 from app.infrastructure.process_runner.runner import Command, recover_interrupted, run
