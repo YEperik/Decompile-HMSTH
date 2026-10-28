@@ -1,4 +1,4 @@
-# Harvest Moon STH — PS2 Decompilation
+# HMSTH-PC — Decompilation Research Workbench
 
 **An independent decompilation-research and tooling project for _Harvest Moon: Save the Homeland_ (PlayStation 2, North American release).**
 

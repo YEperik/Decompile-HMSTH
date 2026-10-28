@@ -4,6 +4,7 @@ Changes are recorded by release. Unreleased work should be described in the pull
 
 ## Unreleased
 
+- Added a concrete diagnosis for the 2026-10-28 CI log mismatch and made the workflow contract test report a clear assertion when the resolver step is missing.
 - Corrected the Python package layout so the `app` module used by the CLI and test suite is present in the repository.
 - Added package metadata and the `ps2-workbench` command entry point.
 - Expanded project documentation with explicit status, target revision, architecture, verification limits, release hygiene, and legal/redistribution policy.

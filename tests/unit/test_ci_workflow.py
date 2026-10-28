@@ -12,9 +12,15 @@ class CIWorkflowContractTests(unittest.TestCase):
         cls.text = WORKFLOW.read_text(encoding="utf-8")
 
     def test_source_root_is_resolved_before_module_invocation(self):
+        self.assertIn(
+            "- name: Resolve project source root",
+            self.text,
+            "CI workflow is stale: add the source-root resolver before invoking the app module.",
+        )
         resolve = self.text.index("- name: Resolve project source root")
+        self.assertIn("- name: Show CLI help", self.text)
         cli = self.text.index("- name: Show CLI help")
-        self.assertLess(resolve, cli)
+        self.assertLess(resolve, cli, "Resolve the project root before invoking Python modules.")
         self.assertIn("app/__main__.py", self.text)
         self.assertIn("tools/check_public_release.py", self.text)
         self.assertIn("find \"$workspace\"", self.text)
