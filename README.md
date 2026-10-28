@@ -1,4 +1,4 @@
-# HMSTH-PC — Decompilation Research Workbench
+# HMSTH-PC — Decomp
 
 **An independent decompilation-research and tooling project for _Harvest Moon: Save the Homeland_ (PlayStation 2, North American release).**
 
