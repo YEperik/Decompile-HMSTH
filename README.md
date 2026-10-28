@@ -4,7 +4,7 @@
 
 > **Status: In Progress — research tooling only.** This repository does not currently provide a verified, playable PC build or a completed matching decompilation. The long-term goal is to investigate whether a clean PC implementation is feasible; that goal is not a claim of completion.
 
-[Recompedia submission requirements](https://recompedia.com/submit) · [Project policy](docs/LEGAL_AND_RELEASE_POLICY.md) · [Architecture](docs/ARCHITECTURE.md) · [Verification guide](docs/VERIFICATION.md) · [Roadmap](ROADMAP.md)
+[Recompedia submission requirements](https://recompedia.com/submit) · [Project policy](docs/LEGAL_AND_RELEASE_POLICY.md) · [Architecture](docs/ARCHITECTURE.md) · [Verification guide](docs/VERIFICATION.md) · [CI diagnostics](docs/CI_DIAGNOSTICS.md) · [GitHub migration guide](MIGRATION_TO_GITHUB.md) · [Roadmap](ROADMAP.md)
 
 ## At a glance
 
@@ -120,7 +120,7 @@ python -m app --help
 
 The automated release check rejects common game-dump and proprietary-asset extensions, including those inside archives. It is a guardrail, not a legal determination or a perfect detector; maintainers must still manually review the complete diff, archives, test fixtures, release artifacts, and commit history before publishing.
 
-GitHub Actions runs the unit tests and release check on supported Python versions. See [Verification](docs/VERIFICATION.md) for the meaning of a passing test and known gaps.
+GitHub Actions runs compile checks, tests, wheel build/install smoke tests, and release hygiene on supported Python versions. Each run writes a summary and uploads diagnostics when available. See [CI Diagnostics](docs/CI_DIAGNOSTICS.md) when a check fails and [Verification](docs/VERIFICATION.md) for the meaning of a passing test and known gaps.
 
 ## Contributing
 

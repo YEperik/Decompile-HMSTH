@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hmsth-pc-workbench"
+version = "0.1.0"
+description = "A PS2 reverse-engineering research workbench for Harvest Moon: Save the Homeland (USA, SLUS_202.51)."
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+license-files = ["LICENSE", "NOTICE.md", "THIRD_PARTY_NOTICES.md"]
+authors = [
+  { name = "HMSTH-PC contributors" },
+]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Reverse Engineering",
+]
+dependencies = []
+
+[project.scripts]
+ps2-workbench = "app.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.unittest]
+test-discovery = "tests"
+
+[tool.setuptools.package-data]
+app = ["ghidra_scripts/*.java"]

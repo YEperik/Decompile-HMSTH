@@ -19,3 +19,7 @@ The root `LICENSE` applies only to project-authored code and documentation that 
 ## Provenance rule for future contributions
 
 For every newly introduced third-party source file, add a row to this register containing the source URL, exact revision or version, file paths, license, modifications, and notice requirements. When provenance cannot be established, keep the material out of the public repository until reviewed.
+
+## Excluded historical material
+
+A historical GUI source fixture was removed from the public test tree because the current CLI does not require it and its standalone source/license provenance was not needed for the tests. The current test suite validates history records against the current service using synthetic workspace artifacts instead. Reintroduce historical code only after confirming ownership, source origin, and license/notice requirements.

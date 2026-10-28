@@ -40,7 +40,7 @@ class PresentationTests(unittest.TestCase):
                 self.assertEqual(code,0);self.assertIn('status: OK',out);self.assertNotIn('Long explanation',out);self.assertLessEqual(len(out.splitlines()),19)
     def test_compact_preserves_status_and_controls(self):
         output=compact({'items':list(range(1000)),'status':'FAILED','message':'bad\x1b[2J\nname'})
-        self.assertIn('status: FAILED',output);self.assertNotIn('\x1b',output);self.assertIn('Detail lengkap',output)
+        self.assertIn('status: FAILED',output);self.assertNotIn('\x1b',output);self.assertIn('Full details',output)
     def test_incompatible_output_flags_rejected(self):
         self.assertEqual(self.run_cli(['--json','--text','tools-detect'])[0],2)
 
